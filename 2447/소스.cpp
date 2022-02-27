@@ -5,55 +5,23 @@ using namespace std;
 
 void star(int n, int i, int j)
 {
-	if (i >= (n / 3) + 1 && i <= 2 * (n / 3) &&
-		j >= (n / 3) + 1 && j <= 2 * (n / 3))
+	if ((i % n) >= (n / 3) + 1 && (i % n) <= 2 * (n / 3) &&
+		(j % n) >= (n / 3) + 1 && (j % n) <= 2 * (n / 3))
 	{
 		cout << " ";
-		return;
 	}
-
-	cout << "*";
-	return;
-}
-
-void base(int n, int i, int j)
-{
-	if (i != 0 || j != 0)
+	else
 	{
-		if (i >= (n / 3) + 1 && i <= 2 * (n / 3) &&
-			j >= (n / 3) + 1 && j <= 2 * (n / 3))
+		if (n == 3)
 		{
-			cout << " ";
-			return;
+			cout << "*";
 		}
 		else
 		{
-			cout << "*";
-			return;
+			star(n / 3, i, j);
 		}
 	}
-
-	for (int i = 1; i <= n; i++)
-	{
-		for (int j = 1; j <= n; j++)
-		{
-			if (i >= (n / 3) + 1 && i <= 2 * (n / 3) &&
-				j >= (n / 3) + 1 && j <= 2 * (n / 3))
-			{
-				base(n, i, j);
-			}
-			else
-			{
-				base(n / 3, i, j);
-			}
-		}
-	}
-
-	
 }
-
-
-
 int main()
 {
 	cin.tie(NULL);
@@ -62,7 +30,14 @@ int main()
 	int n;
 	cin >> n;
 
-	base(n, 0, 0);
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = 1; j <= n; j++)
+		{
+			star(n, i, j);
+		}
+		cout << endl;
+	}
 
 	return 0;
 }

@@ -1,75 +1,119 @@
 #include <iostream>
-#include <vector>
 #include <algorithm>
-using namespace std;
-vector <vector <int>> vec;
-int max_t = numeric_limits<int>::min();
-int i_1 = -1, j_1 = -1;
+#include <vector>
 
-int tetro(int i, int j, int count, int sum)
+using namespace std;
+
+vector <int> dx = {0, 0, 1, -1};
+vector <int> dy = {1, -1, 0, 0};
+
+int n, m;
+int maxi = -987654321;
+
+vector <vector<int>> vec(501, vector<int>(501));
+vector <vector<int>> ch(501, vector<int>(501));
+
+int save_i, save_j;
+
+void dfs(int i, int j, int len, int sum)
 {
-	if (i < 0 || i >= vec.size() || j < 0 || j >= vec[i].size() || (i == i_1 && j == j_1))
+	if (len == 4)
 	{
-		count++;
+		if (sum > maxi)
+		{
+			maxi = sum;
+		}
+
+		return;
 	}
 	else
 	{
-		i_1 = i;
-		j_1 = j;
-		sum += vec[i][j];
-		count++;
-	}
-
-	if (count == 4)
-	{
-		if (max_t < sum)
+		for (int k = 0; k < 4; k++)
 		{
-			max_t = sum;
+			if (ch[i][j] == 0 
+				&& 0 <= i + dy[k] && i + dy[k] < n 
+				&& 0 <= j + dx[k] && j + dx[k] < m)
+			{
+				ch[i][j] = 1;
+				dfs(i + dy[k], j + dx[k], len + 1, sum + vec[i][j]);
+				ch[i][j] = 0;
+			}
 		}
-		return sum;
 	}
+}
 
-	sum = tetro(i + 1, j, count, sum) + tetro(i - 1, j, count, sum) + tetro(i, j + 1, count, sum) + tetro(i, j - 1, count, sum);
+void dfs_2(int i, int j, int len, int sum)
+{
+	if (len == 3)
+	{
+		for (int k = 0; k < 4; k++)
+		{
+			if (0 <= save_i + dy[k] && save_i + dy[k] < n
+				&& 0 <= save_j + dx[k] && save_j + dx[k] < m 
+				&& ch[save_i + dy[k]][save_j + dx[k]] == 0)
+			{
+				sum += vec[save_i + dy[k]][save_j + dx[k]];
 
-	return max_t;
+				if (sum > maxi)
+				{
+					maxi = sum;
+				}
+
+				sum -= vec[save_i + dy[k]][save_j + dx[k]];
+			}
+		}
+		
+		return;
+	}
+	else
+	{
+		for (int k = 0; k < 4; k++)
+		{
+			if (ch[i][j] == 0
+				&& 0 <= i + dy[k] && i + dy[k] < n
+				&& 0 <= j + dx[k] && j + dx[k] < m)
+			{
+				ch[i][j] = 1;
+
+				if (len == 1)
+				{
+					save_i = i;
+					save_j = j;
+				}
+			
+				dfs_2(i + dy[k], j + dx[k], len + 1, sum + vec[i][j]);
+			
+				ch[i][j] = 0;
+			}
+		}
+	}
 }
 
 int main()
 {
-	int n, m;
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+
 	cin >> n >> m;
 
 	for (int i = 0; i < n; i++)
 	{
-		vector <int> vec1;
-
 		for (int j = 0; j < m; j++)
 		{
-			int push;
-			cin >> push;
-			vec1.push_back(push);
+			cin >> vec[i][j];
 		}
-
-		vec.push_back(vec1);
 	}
-
-	int max = numeric_limits<int>::min();
 
 	for (int i = 0; i < n; i++)
 	{
 		for (int j = 0; j < m; j++)
 		{
-			int temp = tetro(i, j, 0, 0);
-
-			if (max < temp)
-			{
-				max = temp;
-			}
+			dfs(i, j, 0, 0);
+			dfs_2(i, j, 0, 0);
 		}
 	}
 
-	cout << max;
-
+	cout << maxi;
 
 	return 0;
 }

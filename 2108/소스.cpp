@@ -1,102 +1,113 @@
 #include <iostream>
-#include <vector>
-#include <limits>
 #include <algorithm>
+#include <vector>
+#include <string>
 #include <cmath>
+#define endl '\n'
 using namespace std;
 
-int main()
+int N;
+vector <int> vec;
+
+void sansool()
 {
-	int n;
-	cin >> n;
-
-	vector<int> arr(n);
-
-	for (int i = 0; i < n; i++)
-	{
-		cin >> arr[i];
-	}
-
-	sort(arr.begin(), arr.end());
-
-	//»ê¼úÆò±Õ
 	double sum = 0;
-	for (int i = 0; i < n; i++)
+
+	for (int i = 0; i < N; i++)
 	{
-		sum += arr[i];
+		sum += vec[i];
 	}
-	cout << fixed;
-	cout.precision(0);
-	cout << sum / double(n) << "\n";
 
-	//Áß¾Ó°ª
-	cout << arr[n / 2] << "\n";
+	if (round(sum / double(N)) == -0)
+	{
+		cout << 0 << endl;
+	}
+	else
+	{
+		cout << round(sum / double(N)) << endl;
+	}
+}
 
-	//ÃÖºó°ª
-	int num = 1;
+void jungang()
+{
+	cout << vec[N / 2] << endl;
+}
+
+void choibin()
+{
 	vector <int> res;
 
-	arr.push_back(NULL);
+	int num = 1;
+	int max = numeric_limits<int>::min();
 
-	for (int i = 0; i < n; i++)
-	{			
-		if (arr[i] == arr[i + 1])
+	if (vec.size() == 1)
+	{
+		cout << vec[0] << endl;
+		return;
+	}
+
+	vec.push_back(4001);
+
+	for (int i = 0; i < N; i++)
+	{
+		if (vec[i] == vec[i + 1])
 		{
 			num++;
 		}
 		else
 		{
-			res.push_back(num);
+			if (max < num)
+			{
+				max = num;
+				res.clear();
+				res.push_back(vec[i]);
+			}
+			else if (max == num)
+			{
+				res.push_back(vec[i]);
+			}
+
 			num = 1;
 		}
 	}
-	arr.pop_back();
 
-	int max = numeric_limits<int>::min();
-	for (int i = 0; i < res.size(); i++)
+	vec.pop_back();
+	
+	if (res.size() == 1)
 	{
-		if (max < res[i])
-		{
-			max = res[i];
-		}
-	}
-
-	int num_s = 0;
-	vector<int> j;
-	for (int i = 0; i < res.size(); i++)
-	{
-		if (max == res[i])
-		{
-			j.push_back(i);
-			num_s++;
-		}
-		if (j.size() > 1)
-		{
-			break;
-		}
-	}
-
-	if (num_s > 1)
-	{
-		int sum_1 = 0;
-		for (int i = 0; i < j[1]; i++)
-		{
-			sum_1 += res[i];
-		}
-		cout << arr[sum_1] << "\n";
+		cout << res[0] << endl;
 	}
 	else
 	{
-		int sum_1 = 0;
-		for (int i = 0; i < j[0]; i++)
-		{
-			sum_1 += res[i];
-		}
-		cout << arr[sum_1] << "\n";
+		cout << res[1] << endl;
 	}
-	
-	//¹üÀ§
-	cout << arr[n - 1] - arr[0] << "\n";
+}
+
+void scope()
+{
+	cout << vec[N - 1] - vec[0] << endl;
+}
+
+int main()
+{
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
+
+	cin >> N;
+
+	vec = vector <int>(N);
+
+	for (int i = 0; i < N; i++)
+	{
+		cin >> vec[i];
+	}
+
+	sort(vec.begin(), vec.end());
+
+	sansool();
+	jungang();
+	choibin();
+	scope();
 
 	return 0;
 }

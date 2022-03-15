@@ -30,19 +30,22 @@ int main()
 	string s;
 	cin >> s;
 
-	int M = 1234567891;
-	int sum = 0;
+	unsigned long long M = 1234567891;
+	unsigned long long sum = 0;
 
 	for (int i = 0; i < s.size(); i++)
 	{
-		for (int j = 0; j <= i; j++)
+		unsigned long long mul = 1;
+
+		for (int j = 0; j < i; j++)
 		{
-			(31 * j) % M;
+			mul = (mul * 31) % M;
 		}
-		//sum += (alp(s[i])* pow(31, i)) % M;
+
+		sum = (sum + (alp(s[i]) * mul) % M) % M;
 	}
 
-	cout << (sum) % M;
+	cout << sum;
 
 	return 0;
 }

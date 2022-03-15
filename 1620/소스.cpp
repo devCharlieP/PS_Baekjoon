@@ -16,6 +16,8 @@ int main()
 
 	cin >> N >> M;
 
+	vector<string> vec_pokemon_dogam(1);
+
 	map<string, int> pokemon_dogam;
 
 	for (int i = 1; i <= N; i++)
@@ -23,8 +25,11 @@ int main()
 		string s;
 		cin >> s;
 
+		vec_pokemon_dogam.push_back(s);
 		pokemon_dogam.insert({ s, i });
 	}
+	
+	map<string, int>::iterator iter;
 
 	for (int i = 1; i <= M; i++)
 	{
@@ -37,18 +42,12 @@ int main()
 			stringstream ssInt(s);
 			ssInt >> num;
 
-			cout << pokemon_dogam[num] << endl;
+			cout << vec_pokemon_dogam[num] << endl;
 		}
 		else
 		{
-			for (int j = 1; j <= N; j++)
-			{
-				if (pokemon_dogam[j] == s)
-				{
-					cout << j << endl;
-					break;
-				}
-			}
+			iter = pokemon_dogam.find(s);
+			cout << iter->second << endl;
 		}
 	}
 

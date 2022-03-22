@@ -6,9 +6,7 @@
 #define endl '\n'
 using namespace std;
 
-vector <int> vec(500001);
-
-
+vector <int> vec(50001);
 
 int main()
 {
@@ -18,17 +16,32 @@ int main()
 	int n;
 	cin >> n;
 
-	int cnt = 0;
-
-	int max = 1;
-
-	while (pow(max, 2) < n)
 	{
-		max++;
+		int i = 1;
+
+		while (pow(i, 2) <= 50000)
+		{
+			vec[pow(i, 2)] = 1;
+			i++;
+		}
 	}
 
+	int sav = 0;
+	
+	for (int i = 1; i <= n; i++)
+	{
+		if (vec[i] == 0)
+		{
+			for (int j = 1; j <= i; j++)
+			{
 
-	cout << cnt;
+			}
+		}
+
+	}
+		
+
+	cout << vec[n];
 
 	return 0;
 }

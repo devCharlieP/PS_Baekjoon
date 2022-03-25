@@ -6,7 +6,7 @@
 #define endl '\n'
 using namespace std;
 
-vector <int> vec(50001);
+vector <int> vec(50003, 4);
 
 int main()
 {
@@ -26,22 +26,19 @@ int main()
 		}
 	}
 
-	int sav = 0;
-	
 	for (int i = 1; i <= n; i++)
 	{
-		if (vec[i] == 0)
+		if (vec[i] != 0)
 		{
-			for (int j = 1; j <= i; j++)
+			for (int j = 1; j * j <= i; j++)
 			{
-
+				vec[i] = min(vec[i], vec[j * j] + vec[i - (j * j)]);
 			}
-		}
 
+		}
 	}
-		
 
 	cout << vec[n];
-
+	
 	return 0;
 }

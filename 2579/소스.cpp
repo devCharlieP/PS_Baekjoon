@@ -1,8 +1,7 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
-#include <string>
-#include <cmath>
+
 #define endl '\n'
 using namespace std;
 
@@ -24,28 +23,14 @@ int main()
 	vector <int> dp(305);
 
 	dp[1] = vec[1];
+	dp[2] = vec[1] + vec[2];
+	dp[3] = max(vec[1] + vec[3], vec[2] + vec[3]);
+	
 	int level = 0;
 	
-	for (int i = 2; i <= n; i++)
+	for (int i = 4; i <= n; i++)
 	{
-		if (level == 1)
-		{
-			level = 0;
-			dp[i] = vec[i] + dp[i - 2];
-		}
-		else
-		{
-			if (vec[i] + dp[i - 1] <= vec[i] + dp[i - 2])
-			{
-				level = 0;
-				dp[i] = vec[i] + dp[i - 2];
-			}
-			else
-			{
-				level++;
-				dp[i] = vec[i] + dp[i - 1];
-			}
-		}
+		dp[i] = max(dp[i - 2] + vec[i], dp[i - 3] + vec[i - 1] + vec[i]);
 	}
 
 	cout << dp[n];

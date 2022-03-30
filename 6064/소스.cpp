@@ -1,8 +1,6 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
-#include <string>
-#include <cmath>
 #define endl '\n'
 using namespace std;
 
@@ -30,34 +28,39 @@ int main()
 		int M, N, x, y;
 		cin >> M >> N >> x >> y;
 
-		int res = 0;
+		if (M < N)
+		{
+			swap(M, N);
+			swap(x, y);
+		}
+
 		bool b = false;
 		int lcm = 0;
 
-		if (M >= N)
+		lcm = M * N / (gcd(M, N));
+
+		if (M == x)
 		{
-			lcm = M * N / (gcd(M, N));
+			x = 0;
 		}
-		else
+		if (N == y)
 		{
-			lcm = M * N / (gcd(N, M));
+			y = 0;
 		}
 
-		for (int i = 1; i <= lcm; i++)
+		for (int i = 0; i + y <= lcm; i += N)
 		{
-			if (i % M == x && i % N == y)
+			if (i + y != 0)
 			{
-				res = i;
-				b = true;
-				break;
+				if ((i + y) % M == x)
+				{
+					cout << i + y << endl;
+					b = true;
+				}
 			}
 		}
 
-		if (b == true)
-		{
-			cout << res << endl;
-		}
-		else
+		if (b == false)
 		{
 			cout << -1 << endl;
 		}

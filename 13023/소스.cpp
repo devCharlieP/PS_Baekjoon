@@ -5,15 +5,15 @@ using namespace std;
 
 vector <vector<int>> vec(2001, vector <int>(2001));
 vector <int> ch(2001);
-vector <int> ch_2(2001);
 int n;
 int res = 0;
 
 void dfs(int L, int cnt)
 {
-	if (cnt == 4)
+	if (cnt == 5)
 	{
 		res = 1;
+		return;
 	}
 
 	for (int i = 0; i < n; i++)
@@ -43,15 +43,14 @@ int main()
 
 	for (int i = 0; i < n; i++)
 	{
-		for (int j = 0; j < n; j++)
+		if (res == 1)
 		{
-			if (vec[i][j] == 1)
-			{
-				ch[i] = 1, ch[j] = 1;
-				dfs(j, 1);
-				ch = ch_2;
-			}
+			break;
 		}
+
+		ch[i] = 1;
+		dfs(i, 1);
+		ch[i] = 0;
 	}
 
 	cout << res;

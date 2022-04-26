@@ -3,7 +3,7 @@
 #include <vector>
 using namespace std;
 
-vector <vector<int>> vec(2001, vector <int>(2001));
+vector <int> vec[2001];
 vector <int> ch(2001);
 int n;
 int res = 0;
@@ -16,12 +16,18 @@ void dfs(int L, int cnt)
 		return;
 	}
 
-	for (int i = 0; i < n; i++)
+	for (int i = 0; i < vec[L].size(); i++)
 	{
-		if (ch[i] == 0 && vec[L][i] == 1)
+		if (ch[vec[L][i]] == 0)
 		{
-			ch[i] = 1;
-			dfs(i, cnt + 1);
+			ch[vec[L][i]] = 1;
+			dfs(vec[L][i], cnt + 1);
+			ch[vec[L][i]] = 0;
+		}
+
+		if (res == 1)
+		{
+			return;
 		}
 	}
 }
@@ -37,20 +43,20 @@ int main()
 	{
 		int x, y;
 		cin >> x >> y;
-		vec[x][y] = 1;
-		vec[y][x] = 1;
+		vec[x].push_back(y);
+		vec[y].push_back(x);
 	}
 
 	for (int i = 0; i < n; i++)
 	{
+		ch[i] = 1;
+		dfs(i, 1);
+		ch[i] = 0;
+
 		if (res == 1)
 		{
 			break;
 		}
-
-		ch[i] = 1;
-		dfs(i, 1);
-		ch[i] = 0;
 	}
 
 	cout << res;

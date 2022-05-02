@@ -23,7 +23,6 @@ void pushHeap(int x)
 		child = parent;
 		parent = child / 2;
 	}
-
 }
 
 int popHeap()
@@ -43,7 +42,6 @@ int popHeap()
 			child = child + 1;
 		}
 	}
-	
 
 	while (maxHeap[parent] < maxHeap[child] && child <= cntHeap)
 	{
@@ -59,7 +57,6 @@ int popHeap()
 				child = child + 1;
 			}
 		}
-
 	}
 
 	return res;
@@ -79,7 +76,7 @@ int main()
 		cin >> vecN[i];
 	}
 
-	maxHeap[0] = pow(2, 31) + 1;
+	maxHeap[0] = pow(2, 31) - 1;
 
 	for (int i = 0; i < N; i++)
 	{

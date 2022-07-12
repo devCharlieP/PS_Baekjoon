@@ -44,24 +44,25 @@ int main()
 		}
 	}
 
-	vector <pair<int, int>> vec_pair = { make_pair(N, 0), make_pair(-N, 0), 
+	vector <pair<int, int>> vec_pair = {make_pair(N, 0), make_pair(-N, 0),
 		make_pair(-1, 0), make_pair(1, 0), make_pair(0, -1), make_pair(0, 1)};
 
 	int res = 0;
 	pair<int, int> back = Q.back();
+	pair<int, int> front;
 
 	while (!Q.empty())
 	{
-		pair<int, int> tomato_pt = Q.front();
+		front = Q.front();
 		Q.pop();
 
 		for (int i = 0; i < 6; i++)
 		{
 			bool b = true;
-			int first = tomato_pt.first + vec_pair[i].first;
-			int second = tomato_pt.second + vec_pair[i].second;
+			int first = front.first + vec_pair[i].first;
+			int second = front.second + vec_pair[i].second;
 
-			if (first >= 1 && first <= N * H && second >= 1 && second <= M)
+			if (first >= 1 && first <= (N * H) && second >= 1 && second <= M)
 			{
 				if (i == 2)
 				{
@@ -92,10 +93,24 @@ int main()
 			}			
 		}
 
-		if (!Q.empty() && (back == tomato_pt))
+		if (!Q.empty() && (front == back))
 		{
 			res++;
 			back = Q.back();
+
+			cout << endl;
+
+			for (int i = 1; i <= H; i++)
+			{
+				for (int j = 1; j <= N; j++)
+				{
+					for (int k = 1; k <= M; k++)
+					{
+						cout << tomato[j + ((i - 1) * N)][k] << "  ";
+					}
+					cout << endl;
+				}
+			}
 		}
 	}
 

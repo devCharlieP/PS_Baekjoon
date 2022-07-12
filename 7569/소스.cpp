@@ -8,7 +8,16 @@
 using namespace std;
 
 int M, N, H;
-vector <vector <int>> tomato(10001, vector<int>(101));
+int tomato[101][101][101];
+int ch[101][101][101];
+int res = 0;
+
+struct TD
+{
+	int M_x;
+	int N_y;
+	int H_z;
+};
 
 int main()
 {
@@ -23,12 +32,12 @@ int main()
 		{
 			for (int k = 1; k <= M; k++)
 			{
-				cin >> tomato[j + ((i - 1) * N)][k];
+				cin >> tomato[i][j][k];
 			}
 		}
 	}
 
-	queue <pair<int, int>> Q;
+	queue <TD> Q;
 
 	for (int i = 1; i <= H; i++)
 	{
@@ -36,83 +45,48 @@ int main()
 		{
 			for (int k = 1; k <= M; k++)
 			{
-				if (tomato[j + ((i - 1) * N)][k] == 1)
+				if (tomato[i][j][k] == 1)
 				{
-					Q.push(make_pair(j + ((i - 1) * N), k));
+					Q.push({k, j, i});
 				}
 			}
 		}
 	}
 
-	vector <pair<int, int>> vec_pair = {make_pair(N, 0), make_pair(-N, 0),
-		make_pair(-1, 0), make_pair(1, 0), make_pair(0, -1), make_pair(0, 1)};
+	vector <TD> vec_pos;
 
-	int res = 0;
-	pair<int, int> back = Q.back();
-	pair<int, int> front;
+	vec_pos.push_back({ 1, 0, 0 });
+	vec_pos.push_back({ -1, 0, 0 });
+	vec_pos.push_back({ 0, 1, 0 });
+	vec_pos.push_back({ 0, -1, 0 });
+	vec_pos.push_back({ 0, 0, 1 });
+	vec_pos.push_back({ 0, 0, -1 });
 
 	while (!Q.empty())
 	{
-		front = Q.front();
+		TD front = Q.front();
 		Q.pop();
 
 		for (int i = 0; i < 6; i++)
 		{
-			bool b = true;
-			int first = front.first + vec_pair[i].first;
-			int second = front.second + vec_pair[i].second;
+			int x = front.M_x + vec_pos[i].M_x;
+			int y = front.N_y + vec_pos[i].N_y;
+			int z = front.H_z + vec_pos[i].H_z;
 
-			if (first >= 1 && first <= (N * H) && second >= 1 && second <= M)
+			if (x >= 1 && x <= M && y >= 1 && y <= N && z >= 1 && z <= H)
 			{
-				if (i == 2)
+				if (tomato[z][y][x] == 0)
 				{
-					if (first % N == 0)
-					{
-						b = false;
-					}
-				}
+					tomato[z][y][x] = 1;
+					Q.push({ x, y, z });
 
-				if (i == 3)
-				{
-					if (first % N == 1)
-					{
-						b = false;
-					}
-				}
-
-				if (tomato[first][second] == -1 || tomato[first][second] == 1)
-				{
-					b = false;
-				}
-
-				if (b == true)
-				{
-					tomato[first][second] = 1;
-					Q.push(make_pair(first, second));
-				}
-			}			
-		}
-
-		if (!Q.empty() && (front == back))
-		{
-			res++;
-			back = Q.back();
-
-			cout << endl;
-
-			for (int i = 1; i <= H; i++)
-			{
-				for (int j = 1; j <= N; j++)
-				{
-					for (int k = 1; k <= M; k++)
-					{
-						cout << tomato[j + ((i - 1) * N)][k] << "  ";
-					}
-					cout << endl;
+					ch[z][y][x] = ch[front.H_z][front.N_y][front.M_x] + 1;
 				}
 			}
 		}
 	}
+
+	int max = -987654321;
 
 	for (int i = 1; i <= H; i++)
 	{
@@ -120,7 +94,23 @@ int main()
 		{
 			for (int k = 1; k <= M; k++)
 			{
-				if (tomato[j + ((i - 1) * N)][k] == 0)
+				if (ch[i][j][k] > max)
+				{
+					max = ch[i][j][k];
+				}
+			}
+		}
+	}
+
+	res = max;
+
+	for (int i = 1; i <= H; i++)
+	{
+		for (int j = 1; j <= N; j++)
+		{
+			for (int k = 1; k <= M; k++)
+			{
+				if (tomato[i][j][k] == 0)
 				{
 					res = -1;
 				}

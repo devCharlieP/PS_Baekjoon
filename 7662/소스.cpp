@@ -7,28 +7,39 @@
 #define endl '\n'
 using namespace std;
 
-vector <int> vec;
+priority_queue<int> max_Q;
+priority_queue<int, vector<int>, greater<int>> min_Q;
+vector <long long> vec;
 
 void input(int n)
 {
-	vec.push_back(n);
-	sort(vec.begin(), vec.end());
+	max_Q.push(n);
+	min_Q.push(n);
 }
 
 void _delete(int n)
 {
-	if (!vec.empty())
+	int d = 0;
+
+	if (n == 1)
 	{
-		if (n == 1)
+		d = max_Q.top();
+
+		while (!max_Q.empty() && vec[d] == 0)
 		{
-			vec.pop_back();
+			max_Q.pop();
 		}
-		else
-		{
-			sort(vec.rbegin(), vec.rend());
-			vec.pop_back();
-			sort(vec.begin(), vec.end());
-		}
+
+		vec[d]--;
+
+		max_Q.pop();
+	}
+	else if(n == -1)
+	{
+		d = min_Q.top();
+		vec[d]--;
+
+		min_Q.pop();
 	}
 }
 
@@ -55,21 +66,13 @@ int main()
 			if (c == 'I')
 			{
 				input(n);
+				vec[n]++;
 			}
 			else if(c == 'D')
 			{
 				_delete(n);
 			}
-		}
-
-		if (vec.empty())
-		{
-			cout << "EMPTY" << endl;
-		}
-		else
-		{
-			cout << vec[vec.size() - 1] << " " << vec[0] << endl;
-		}
+		}		
 	}
 
 	return 0;

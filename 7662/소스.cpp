@@ -3,46 +3,80 @@
 #include <vector>
 #include <string>
 #include <cmath>
+#include <map>
 #include <queue>
 #define endl '\n'
 using namespace std;
 
 priority_queue<int> max_Q;
 priority_queue<int, vector<int>, greater<int>> min_Q;
-vector <long long> vec;
+map<int, int> M;
 
 void input(int n)
 {
 	max_Q.push(n);
 	min_Q.push(n);
+
+	M[n]++;
 }
 
-void _delete(int n)
-{
-	int d = 0;
+void del(int n)
+{	
+	int top = 0;
 
 	if (n == 1)
 	{
-		d = max_Q.top();
-
-		while (!max_Q.empty() && vec[d] == 0)
+		if (max_Q.empty())
 		{
-			max_Q.pop();
+			return;
 		}
 
-		vec[d]--;
-
-		max_Q.pop();
+		top = max_Q.top();
 	}
-	else if(n == -1)
+	else
 	{
-		d = min_Q.top();
-		vec[d]--;
+		if (min_Q.empty())
+		{
+			return;
+		}
 
+		top = min_Q.top();
+	}
+
+	M[top]--;
+	if (M[top] < 0)
+	{
+		M[top] = 0;
+	}
+
+	top = max_Q.top();
+
+	while (M[top] == 0)
+	{
+		max_Q.pop();
+
+		if (max_Q.empty())
+		{
+			break;
+		}
+
+		top = max_Q.top();
+	}
+
+	top = min_Q.top();
+
+	while (M[top] == 0)
+	{
 		min_Q.pop();
+
+		if(min_Q.empty())
+		{
+			break;
+		}
+
+		top = min_Q.top();
 	}
 }
-
 int main()
 {
 	cin.tie(NULL);
@@ -51,28 +85,48 @@ int main()
 	int T;
 	cin >> T;
 
-	for (int q = 1; q <= T; q++)
+	for (int z = 1; z <= T; z++)
 	{
-		int	k;
+		max_Q = priority_queue <int>();
+		min_Q = priority_queue <int, vector <int>, greater<int>>();
+		M = map <int, int>();
+
+		int k;
 		cin >> k;
 
-		for (int w = 1; w <= k; w++)
-		{
-			char c;
-			int n;
+		char c;
+		int n;
 
+		for (int y = 1; y <= k; y++)
+		{
 			cin >> c >> n;
 
 			if (c == 'I')
 			{
 				input(n);
-				vec[n]++;
 			}
-			else if(c == 'D')
+			else
 			{
-				_delete(n);
+				del(n);
 			}
-		}		
+		}
+
+		if (max_Q.empty() && min_Q.empty())
+		{
+			cout << "EMPTY" << endl;
+		}
+		else if (max_Q.empty())
+		{
+			cout << min_Q.top() << " " << min_Q.top() << endl;
+		}
+		else if (min_Q.empty())
+		{
+			cout << max_Q.top() << " " << max_Q.top() << endl;
+		}
+		else
+		{
+			cout << max_Q.top() << " " << min_Q.top() << endl;
+		}
 	}
 
 	return 0;

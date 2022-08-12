@@ -8,19 +8,18 @@
 using namespace std;
 
 int N;
-vector <vector <int>> map(21, vector <int>(21));
-vector <vector <int>> timemap(21, vector <int>(21));
-vector <vector <int>> ch(21, vector <int>(21));
+int res = 0;
+
+vector <vector <int>> map(30, vector <int>(30));
+vector <vector <int>> timemap(30, vector <int>(30, -1));
+vector <int> dy = { -1, 0, 0, 1 };
+vector <int> dx = { 0, -1, 1, 0 };
 
 struct dxy
 {
-	int x;
 	int y;
+	int x;
 };
-
-vector <int> dx = { 0, 0, -1, 1 };
-vector <int> dy = { -1, 1, 0, 0 };
-
 
 int main()
 {
@@ -37,8 +36,8 @@ int main()
 		}
 	}
 
-	dxy d1;
 	queue <dxy> Q;
+	queue <dxy> clear;
 
 	for (int i = 1; i <= N; i++)
 	{
@@ -46,123 +45,86 @@ int main()
 		{
 			if (map[i][j] == 9)
 			{
-				d1.y = i;
-				d1.x = j;
-				Q.push(d1);
+				Q.push(dxy{i, j});
 				
 				map[i][j] = 0;
-				ch[i][j] = 1;
+				timemap[i][j] = 0;
 			}
 		}
-	}
-
-	dxy temp;
-	temp.y = 0;
-	temp.x = 0;
-
-	bool b1 = false;
-
-	for (int i = 1; i <= N; i++)
-	{
-		for (int j = 1; j <= N; j++)
-		{
-			if (map[i][j] == 1)
-			{
-				temp.y = i;
-				temp.x = j;
-				b1 = true;
-
-				break;
-			}
-		}
-
-		if (b1 == true)
-			break;
-	}
-
-	if (temp.y == 0 && temp.x == 0)
-	{
-		cout << 0;
-		return 0;
 	}
 
 	int size = 2;
 	int cnt = 0;
 
+	int compare = 0;
+	bool b = false;
+
+	int temp_x = 0;
+	int temp_y = 0;
+
 	while (!Q.empty())
 	{
 		dxy front = Q.front();
-		dxy d;
+		Q.pop();
 
-		if (front.y == temp.y && front.x == temp.x)
+		if (map[front.y][front.x] < size && map[front.y][front.x] != 0)
 		{
-			temp.y = 0;
-			temp.x = 0;
+			if (b == false)
+			{
+				compare = timemap[front.y][front.x];
+				b = true;
+
+				temp_y = front.y;
+				temp_x = front.x;
+
+			}
+			else if(compare == timemap[front.y][front.x])
+			{
+				if (front.y < temp_y)
+				{
+					temp_y = front.y;
+					temp_x = front.x;
+				}
+				else if (front.y == temp_y && front.x < temp_x)
+				{
+					temp_y = front.y;
+					temp_x = front.x;
+				}
+			}
+		}
+
+		if (Q.empty() && b == true)
+		{
+			res += timemap[temp_y][temp_x];
+			timemap = vector <vector <int>>(21, vector<int>(21, -1));
 
 			cnt++;
-
 			if (cnt == size)
 			{
 				cnt = 0;
 				size++;
 			}
 
-			map[front.y][front.x] = 0;
+			map[temp_y][temp_x] = 0;
+			timemap[temp_y][temp_x] = 0;
 
-			bool b2 = false;
+			Q = clear;
+			b = false;
 
-			for (int i = 1; i <= N; i++)
-			{
-				for (int j = 1; j <= N; j++)
-				{
-					if (map[i][j] < size && map[i][j] != 0)
-					{
-						temp.y = i;
-						temp.x = j;
-
-						b2 = true;
-						break;
-					}
-				}
-
-				if (b2 == true)
-					break;
-			}
-
-			if (temp.y == 0 && temp.x == 0)
-			{
-				break;
-			}
-
-			ch = vector <vector<int>>(21, vector <int>(21));
-			ch[front.y][front.x] = 1;
+			Q.push(dxy{ temp_y, temp_x });
+			front = Q.front();
 		}
-
-		Q.pop();
 
 		for (int i = 0; i < 4; i++)
 		{
-			d.x = front.x + dx[i];
-			d.y = front.y + dy[i];
+			int temp_dy = front.y + dy[i];
+			int temp_dx = front.x + dx[i];
 
-			if (map[d.y][d.x] <= size && (d.x >= 1 && d.x <= N) && (d.y >= 1 && d.y <= N) && ch[d.y][d.x] == 0)
+			if (map[temp_dy][temp_dx] <= size && (temp_dy >= 1 && temp_dy <= N) && 
+				(temp_dx >= 1 && temp_dx <= N) && timemap[temp_dy][temp_dx] == -1)
 			{
-				Q.push(d);
-				timemap[d.y][d.x] = timemap[front.y][front.x] + 1;
-				ch[d.y][d.x] = 1;
-			}
-		}
-	}
-
-	int res = -987654321;
-
-	for (int i = 1; i <= N; i++)
-	{
-		for (int j = 1; j <= N; j++)
-		{
-			if (res < timemap[i][j])
-			{
-				res = timemap[i][j];
+				Q.push(dxy{ temp_dy, temp_dx });
+				timemap[temp_dy][temp_dx] = timemap[front.y][front.x] + 1;
 			}
 		}
 	}

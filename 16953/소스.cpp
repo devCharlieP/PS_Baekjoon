@@ -7,6 +7,12 @@
 #define endl '\n'
 using namespace std;
 
+struct AB
+{
+	long long value;
+	long long cnt;
+};
+
 int main()
 {
 	cin.tie(NULL);
@@ -15,42 +21,36 @@ int main()
 	int A, B;
 	cin >> A >> B;
 
-	vector <int> cnt(1000000001);
+	long long limit = pow(10, 9);
 
-	queue<int> Q;
-	Q.push(A);
+	queue <AB> Q;
+	Q.push({A, 0});
 
-	while (!Q.empty())
+	int res = -1;
+
+	while(!Q.empty())
 	{
-		int front = Q.front();
+		AB front = Q.front();
 		Q.pop();
 
-		if (front <= 500000000 && cnt[front * 2] == 0)
+		if (front.value == B)
 		{
-			Q.push(front * 2);
-			cnt[front * 2] = cnt[front] + 1;
+			res = front.cnt + 1;
+			break;
 		}
-		
-		if (front <= 99999999)
-		{
-			
-			Q.push((front * 10) + 1);
-			cnt[(front * 10) + 1] = cnt[front] + 1;
-		}
-		else
-		{
 
+		if (front.value * 2 <= limit)
+		{
+			Q.push({ front.value * 2, front.cnt + 1 });
+		}
+
+		if (front.value * 10 + 1 <= limit)
+		{
+			Q.push({ front.value * 10 + 1, front.cnt + 1 });
 		}
 	}
 
-	if (cnt[B] == 0)
-	{
-		cout << -1;
-	}
-	else
-	{
-		cout << cnt[B] + 1;
-	}
+	cout << res;
 
 	return 0;
 }

@@ -3,30 +3,54 @@
 #include <vector>
 #include <string>
 #include <cmath>
+#include <queue>
 #define endl '\n'
 using namespace std;
 
-int A, B;
-
-int dfs(int x, int cnt)
-{
-	if (x == B)
-	{
-		return cnt;
-	}
-	dfs(x * 2, cnt + 1);
-	dfs(x * 10 + 1, cnt + 1);
-	
-}
 int main()
 {
 	cin.tie(NULL);
 	ios_base::sync_with_stdio(false);
 
+	int A, B;
 	cin >> A >> B;
 
+	vector <int> cnt(1000000001);
 
-	cout << dfs(A, 0);
+	queue<int> Q;
+	Q.push(A);
+
+	while (!Q.empty())
+	{
+		int front = Q.front();
+		Q.pop();
+
+		if (front <= 500000000 && cnt[front * 2] == 0)
+		{
+			Q.push(front * 2);
+			cnt[front * 2] = cnt[front] + 1;
+		}
+		
+		if (front <= 99999999)
+		{
+			
+			Q.push((front * 10) + 1);
+			cnt[(front * 10) + 1] = cnt[front] + 1;
+		}
+		else
+		{
+
+		}
+	}
+
+	if (cnt[B] == 0)
+	{
+		cout << -1;
+	}
+	else
+	{
+		cout << cnt[B] + 1;
+	}
 
 	return 0;
 }

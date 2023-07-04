@@ -1,49 +1,54 @@
 #include <iostream>
+#include <algorithm>
+#include <vector>
+#define endl '\n'
 using namespace std;
+
+void fun()
+{
+	int n;
+	cin >> n;
+	
+	vector<int> vec(n);
+
+	int sum = 0;
+
+	for (int i = 0; i < n; i++)
+	{
+		cin >> vec[i];
+		sum += vec[i];
+	}
+
+	int avg = sum / n;
+
+	int cnt = 0;
+
+	for (int i = 0; i < n; i++)
+	{
+		if (avg < vec[i])
+		{
+			cnt++;
+		}
+	}
+
+	double per = double(cnt) / double(n) * 100;
+
+	cout << fixed;
+	cout.precision(3);
+	cout << per << "%" << endl;
+}
 
 int main()
 {
-	int num;
-	int num_C;
+	cin.tie(NULL);
+	ios_base::sync_with_stdio(false);
 
-	cin >> num;
+	int n;
+	cin >> n;
 
-	double* per = new double[num];
-
-	for (int i = 0; i < num; i++)
+	for (int i = 1; i <= n; i++)
 	{
-		cin >> num_C;
-
-		int* arr = new int[num_C];
-		int sum = 0;
-		int avg = 0;
-		int count = 0;
-
-		for (int j = 0; j < num_C; j++)
-		{
-			cin >> arr[j];
-			sum += arr[j];
-		}
-
-		avg = sum / num_C;
-
-		for (int j = 0; j < num_C; j++)
-		{
-			if (arr[j] > avg)
-			{
-				count++;
-			}
-		}
-		
-		per[i] = ((double)count / (double)num_C) * 100.000;
-
-	}
-
-	for (int i = 0; i < num; i++)
-	{
-		cout << fixed;
-		cout.precision(3);
-		cout << per[i] << "%" << endl;
+		fun();
 	}
 
 	return 0;

@@ -25,7 +25,7 @@ int main()
 
 		if (ch.find(s1) != ch.end())
 		{
-			ch.insert({s2, 0});
+			ch.insert({ s2, 0 });
 		}
 		else if(ch.find(s2) != ch.end())
 		{
